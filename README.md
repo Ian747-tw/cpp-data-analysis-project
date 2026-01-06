@@ -1,7 +1,7 @@
 # C++ Data Processing and Analysis
 
 ## Description
-This repository contains a C++ program for data processing and analysis, developed as part of a homework assignment.
+This repository contains a C++ program for data processing and analysis, developed as part of a practice for data structures
 
 ## Requirements
 - Linux
