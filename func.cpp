@@ -59,7 +59,7 @@ unordered_map<string, vector<string>> make_clicked(const Dataset &data){
         }
     }
 
-    for(auto i : clicked)
+    for(auto &i : clicked)
         sort(i.second.begin(), i.second.end());
 
     return clicked;
@@ -69,9 +69,9 @@ unordered_map<string, vector<string>> make_clicked(const Dataset &data){
 unordered_map<string, unordered_map<string, bool>> make_check_user_of(const unordered_map<string, vector<string>> &clicked){
     unordered_map<string, unordered_map<string, bool>> check_user_of;
     
-    for(auto i : clicked){
-        string pid = i.first;
-        vector<string> users = i.second;
+    for(const auto &i : clicked){
+        const string &pid = i.first;
+        const vector<string> &users = i.second;
 
         for(size_t j = 0; j < users.size(); j++){
             check_user_of[pid][users[j]] = true;
