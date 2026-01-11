@@ -80,3 +80,86 @@ unordered_map<string, unordered_map<string, bool>> make_check_user_of(const unor
 
     return check_user_of;
 }
+
+map<long long, map<string, int>> make_users_avg_sales_after_t(const Dataset &data){
+    map<long long, map<string, int>> users_avg_sales_after_t;
+
+    map<long long, map<string, int>> users_sales_at_t;
+    map<string, long long> users_total_sales;
+    map<long long, map<string, int>> users_clicks_at_t;
+    map<string, int> users_total_clicks;
+
+    vector<string> uids;
+    unordered_map<string, bool> is_in_uids;
+    
+    for(size_t i = 0; i < data.sale.size(); i++){
+        string uid = data.user_id[i];
+        int sale = data.sale[i];
+        long long ct = data.click_timestamp[i];
+        
+        users_total_sales[uid] += sale;
+        users_total_clicks[uid]++;
+
+        if(!users_sales_at_t[ct][uid])
+            users_sales_at_t[ct][uid] = sale;
+        else
+            users_sales_at_t[ct][uid] += sale;
+        
+        if(!is_in_uids[uid]){
+            is_in_uids[uid] = true;
+            uids.push_back(uid);
+        }
+
+        if(!users_clicks_at_t[ct][uid])
+            users_clicks_at_t[ct][uid] = 1;
+        else
+            users_clicks_at_t[ct][uid]++;
+    }
+
+    map<long long, map<string, int>> users_sales_before_t;
+    map<long long, map<string, int>> users_clicks_before_t;
+
+    map<long long, map<string, int>> users_sales_after_t;
+    map<long long, map<string, int>> users_clicks_after_t;
+
+    long long last_ct;
+    int t = 0;
+
+    for(const auto &ct_users : users_sales_at_t){
+        if(t == 0){
+            for(const auto &user : uids){
+                users_sales_before_t[ct_users.first][user] = users_sales_at_t[ct_users.first][user];
+                users_clicks_before_t[ct_users.first][user] = users_clicks_at_t[ct_users.first][user];
+
+                users_sales_after_t[ct_users.first][user] = users_total_sales[user];
+                users_clicks_after_t[ct_users.first][user] = users_total_clicks[user];
+
+                if(users_sales_after_t[ct_users.first][user] == 0 && users_clicks_after_t[ct_users.first][user] == 0){
+                    users_avg_sales_after_t[ct_users.first][user] = 0;
+                }else{
+                    users_avg_sales_after_t[ct_users.first][user] = users_sales_after_t[ct_users.first][user] / users_clicks_after_t[ct_users.first][user];
+                }
+            }
+        }else{
+            for(const auto &user : uids){
+                users_sales_before_t[ct_users.first][user] = users_sales_at_t[ct_users.first][user] + users_sales_before_t[last_ct][user];
+                users_clicks_before_t[ct_users.first][user] = users_clicks_at_t[ct_users.first][user] + users_clicks_before_t[last_ct][user];
+                
+                users_sales_after_t[ct_users.first][user] = users_total_sales[user] - users_sales_before_t[ct_users.first][user];
+                users_clicks_after_t[ct_users.first][user] = users_total_clicks[user] - users_clicks_before_t[ct_users.first][user];
+
+                if(users_sales_after_t[ct_users.first][user] == 0 && users_clicks_after_t[ct_users.first][user] == 0){
+                    users_avg_sales_after_t[ct_users.first][user] = 0;
+                }else{
+                    users_avg_sales_after_t[ct_users.first][user] = users_sales_after_t[ct_users.first][user] / users_clicks_after_t[ct_users.first][user];
+                }
+            }
+        }
+
+        last_ct = ct_users.first;
+        t++;     
+    }
+
+    return users_avg_sales_after_t;    
+
+}

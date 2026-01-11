@@ -30,4 +30,4 @@ unordered_map<string, vector<string>> make_clicked(const Dataset &data);
 
 unordered_map<string, unordered_map<string, bool>> make_check_user_of(const unordered_map<string, vector<string>> &clicked);
 
-
+map<long long, map<string, int>> make_users_avg_sales_after_t(const Dataset &data);
