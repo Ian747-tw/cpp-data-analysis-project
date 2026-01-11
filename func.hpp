@@ -26,7 +26,8 @@ unordered_map<tuple<string, string, long long>, int, tuple_hash> make_M(const Da
 
 unordered_map<string, vector<struct product_info>> make_purchased(const Dataset &data);
 
+unordered_map<string, vector<string>> make_clicked(const Dataset &data);
 
-
+unordered_map<string, unordered_map<string, bool>> make_check_user_of(const unordered_map<string, vector<string>> &clicked);
 
 

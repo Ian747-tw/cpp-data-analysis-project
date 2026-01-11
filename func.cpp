@@ -45,3 +45,38 @@ unordered_map<string, vector<struct product_info>> make_purchased(const Dataset 
     return purchased;
 }
 
+unordered_map<string, vector<string>> make_clicked(const Dataset &data){
+    unordered_map<string, vector<string>> clicked;
+    unordered_map<string, unordered_map<string, bool>> is_in_clicked;
+    
+    for(size_t i = 0; i < data.sale.size(); i++){
+        string pid = data.product_id[i];
+        string uid = data.user_id[i];
+
+        if(!is_in_clicked[pid][uid]){
+            clicked[pid].push_back(uid);
+            is_in_clicked[pid][uid] = true;
+        }
+    }
+
+    for(auto i : clicked)
+        sort(i.second.begin(), i.second.end());
+
+    return clicked;
+    
+}
+
+unordered_map<string, unordered_map<string, bool>> make_check_user_of(const unordered_map<string, vector<string>> &clicked){
+    unordered_map<string, unordered_map<string, bool>> check_user_of;
+    
+    for(auto i : clicked){
+        string pid = i.first;
+        vector<string> users = i.second;
+
+        for(size_t j = 0; j < users.size(); j++){
+            check_user_of[pid][users[j]] = true;
+        }
+    }
+
+    return check_user_of;
+}
