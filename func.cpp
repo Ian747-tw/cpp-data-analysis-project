@@ -147,9 +147,9 @@ map<long long, map<string, double>> make_users_avg_sales_after_t(const Dataset &
                 users_sales_before_t[ct_users.first][user] = users_sales_at_t[ct_users.first][user] + users_sales_before_t[last_ct][user];
                 users_clicks_before_t[ct_users.first][user] = users_clicks_at_t[ct_users.first][user] + users_clicks_before_t[last_ct][user];
                 
-                users_sales_after_t[ct_users.first][user] = users_total_sales[user] - users_sales_before_t[ct_users.first][user];
-                users_clicks_after_t[ct_users.first][user] = users_total_clicks[user] - users_clicks_before_t[ct_users.first][user];
-
+                users_sales_after_t[ct_users.first][user] = users_total_sales[user] - users_sales_before_t[ct_users.first][user] + users_sales_at_t[ct_users.first][user];
+                users_clicks_after_t[ct_users.first][user] = users_total_clicks[user] - users_clicks_before_t[ct_users.first][user] + users_clicks_at_t[ct_users.first][user];
+ 
                 if(users_clicks_after_t[ct_users.first][user] == 0){
                     users_avg_sales_after_t[ct_users.first][user] = 0.0;
                 }else{
